@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Función para resolver el problema de la mochila 0/1
+int mochila01(int W, vector<int> &pesos, vector<int> &beneficios, vector<int> & x) {
+    int n = pesos.size();
+    vector<vector<int>> dp(n + 1, vector<int>(W + 1, 0));
+
+    // Construir la tabla DP
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 0; j <= W; ++j) {
+            if (pesos[i - 1] <= j) {
+                // Caso 1: No tomar el objeto i
+                // Caso 2: Tomar el objeto i
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - pesos[i - 1]] + beneficios[i - 1]);
+            } else {
+                // No se puede tomar el objeto i
+                dp[i][j] = dp[i - 1][j];
+            }
+        }
+    }
+    
+    int j = W;
+    for (int i = n - 1; i >= 0; i--) {
+        if (dp[i + 1][j] != dp[i][j]) {
+            x[i] = 1;
+            j -= pesos[i];
+        } else {
+            x[i] = 0;
+        }
+    }
+
+    return dp[n][W]; // Beneficio máximo
+}
+
+// Ejecución principal
+int main() {
+    int W = 1000; // Capacidad de la mochila
+    vector<int> pesos = {130, 570, 140, 200, 360, 400};
+    vector<int> beneficios = {120, 300, 570, 423, 300, 800};
+  vector <int> x(beneficios.size());
+    int beneficioMaximo = mochila01(W, pesos, beneficios, x);
+    cout << "Beneficio máximo: " << beneficioMaximo << endl;
+
+  cout<< "Beneficios usados:" << endl;
+
+    for (int i = 0; i < x.size(); i++){
+      if (x[i] == 1){
+        cout << beneficios[i] << " ";
+      }
+    }
+  cout << endl;
+    for (int i = 0; i < x.size(); i++){
+      if (x[i] == 1){
+        cout << pesos[i] << " ";
+      }
+    }
+
+    return 0;
+}
