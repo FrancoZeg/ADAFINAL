@@ -1,0 +1,39 @@
+#include <iostream>
+#include <vector>
+#include<algorithm>
+using namespace std;
+
+bool comparar(int a, int b){
+  return a > b;
+}
+
+// Función para calcular el número mínimo de monedas
+void findMinCoins(vector<int> &coins, int amount) {
+    sort(coins.begin(), coins.end(), comparar); // Ordenar monedas en orden descendente
+    vector<float> result;
+
+    for (int coin : coins) {
+        while (amount >= coin) {
+            amount -= coin;
+            result.push_back(coin);
+        }
+    }
+
+    if (amount == 0) {
+        cout << "Monedas utilizadas: ";
+        for (float coin : result) cout << coin/100 << " ";
+        cout << endl;
+    } else {
+        cout << "No se puede dar cambio exacto." << endl;
+    }
+}
+
+// Ejecución principal
+int main() {
+    vector<int> coins = {1, 2, 5, 10, 20, 50, 100}; // Valores en céntimos
+    int amount = 1280;
+
+    findMinCoins(coins, amount);
+
+    return 0;
+}
